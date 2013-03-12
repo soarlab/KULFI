@@ -1,6 +1,6 @@
 KULFI
 =====
-
+#### Version: beta version
 ## 1. Introduction
 
 Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, please send it to: <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> / <a href="mailto:haran@cs.utah.edu"> Arvind Haran</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
@@ -31,12 +31,6 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
 ## 4. Steps to Execute
-#### 4.1 Automated Execution using Python Script (Recommended)
-If steps mentioned in this section does not work for you then follow the manual steps mentioned in section 4.2
-
-#### 4.2 Manual Execution using built-in command line option
-If you face any issue while following steps in section 4.1, you could try below steps manually. In case, section 4.1
-worked for you, then you could skip this section.
 
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
@@ -50,19 +44,23 @@ worked for you, then you could skip this section.
     Now link the above two file as mentioned below:
     $ llvm-link Corrupt.bc Sample.bc -o Final.bc
 
-#### 4.3: Inject fault(s)!
+##### Step4: Inject fault(s)!
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
     $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
-    < Final.bc > Final-out.bc
-    Here "Final-out.bc" is the modified LLVM bit code with the required code instrumention to inject static/dynamic fault.
-    
-#### 4.4: Execute
+    < Final.bc > Final-corrupt.bc
+    Here "Final-corrupt.bc" is the modified LLVM bit code with the required code instrumention to inject 
+    static/dynamic fault.
+Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt. 
 
+#### Step4: Execute
+    Use lli to execute the LLVM bitcodes "Final.bc" and "Final-corrupt.bc" as mentioned below:
+    $ lli Final.bc > Final.out
+    $ lli Final-corrupt.bc > Final-corrupt.out
+    "Final.out" and "Final-corrupt.out" contains the program output with and without faults injected 
+    respectively.
+For more details on how to execute LLVM bitcode, refer to the [link](http://llvm.org/docs/GettingStarted.html#an-example-using-the-llvm-tool-chain).  
 
-#### 4.5: Generate Statistics
-##### Note: 
-Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt
     
 ## 5. Command Line Options
 
@@ -87,5 +85,5 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
 
 ## 6. Examples
 
-## 7. Additional Notes
-- None
+## 7. Known Bugs/Limitations
+- Current version of KULFI support fault injection into data register of only integer type. We plan to support float type in future.
