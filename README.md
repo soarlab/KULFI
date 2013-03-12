@@ -12,13 +12,18 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
 ##Installation
-##### Step 1.
+##### Step 1: Download source code
     $ cd where-you-want-kulfi-source-to-live  
     $ git clone https://github.com/vcsharma/KULFI.git
     
-##### Step 2.
-    $ cd KULFI/src  
+##### Step 2: Build
+    $ cd llvm-3.2-build-dir/lib/Transforms
+    $ mkdir Faults
+    $ cd Faults 
+    $ cp <kulfi-source-dir>/KULFI/src/main/* ./        
     $ [sudo] make
+    
+##### Step 3: Install
     $ [sudo] make install
     
 ##### Note: 
@@ -40,7 +45,7 @@ Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-
 ##### Step 4.
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
-    $ opt -load <path-to-fault.so>/fault.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
+    $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
     
     
 ##### Note: 
