@@ -9,7 +9,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - [LLVM version 3.2](http://llvm.org/releases/3.2/docs/ReleaseNotes.html)
 - [Clang version 3.2](http://llvm.org/releases/download.html#3.2)
 - Python 2.5+ ([2.7.3](http://www.python.org/getit/releases/2.7.3/) recommended)
-- Unix like operating system (Ubuntu, Debian)
+- Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
 ##Installation
 ##### Step 1.
@@ -25,7 +25,27 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
 
 ##Steps to Execute
+##### Step 1.
+    Before running the fault pass, first compile the Corrupt.c using below command:
+    clang -O1 -emit-llvm Corrupt.c -c -o Corrupt.bc
+    
+##### Step 2.
+    Now compile your target C source code (say Sample.c) using below command:
+    clang -O1 -emit-llvm Sample.c -c -o Sample.bc
 
+##### Step 3.
+    Now link the above two file as mentioned below:
+    llvm-link Corrupt.bc Sample.bc -o Final.bc
+
+##### Step 4.
+Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
+    
+    opt -load <path-to-fault.so>/fault.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
+    
+    
+##### Note: 
+Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt
+    
 
 ##Command Line Options
 
