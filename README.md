@@ -14,3 +14,21 @@ Prerequisite
 
 Installation Steps
 ==================
+
+Command Line Options
+=================
+
+-staticfault   - to select static fault injection<br>
+-dynfault      - to select dynamic fault injection<br>
+-fp            - [input range: 1-100] [default input: 100] specifies the probablity 
+                 of injecting the fault<br>
+-b             - [input range: 0-7] [default input: 0] specifies which byte of the 
+                 data register to consider for fault injection.<br>
+-de            - [input: 0/1] [default input: 1] 0: doesn't inject error into data 
+                 reg, 1: inject error into data reg<br>
+-pe            - [input: 0/1] [default input: 1] 0: doesn't inject error into pointer 
+                 reg, 1: inject error into pointer reg<br>
+-ijo           - [input: 0/1] [default input: 1] 1: exits after injecting first fault
+                 0: considers all possible fault sites for fault injection<br>
+
+
