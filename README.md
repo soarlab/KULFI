@@ -13,13 +13,13 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 
 ##Installation
 ##### Step 1.
-    cd where-you-want-kulfi-source-to-live  
-    git clone https://github.com/gaussers/KULFI.git
+    $ cd where-you-want-kulfi-source-to-live  
+    $ git clone https://github.com/gaussers/KULFI.git
     
 ##### Step 2.
-    cd KULFI/src  
-    make
-    make install
+    $ cd KULFI/src  
+    $ [sudo] make
+    $ [sudo] make install
     
 ##### Note: 
 Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
@@ -27,20 +27,20 @@ Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-
 ##Steps to Execute
 ##### Step 1.
     Before running the fault pass, first compile the Corrupt.c using below command:
-    clang -O1 -emit-llvm Corrupt.c -c -o Corrupt.bc
+    $ clang -O1 -emit-llvm Corrupt.c -c -o Corrupt.bc
     
 ##### Step 2.
     Now compile your target C source code (say Sample.c) using below command:
-    clang -O1 -emit-llvm Sample.c -c -o Sample.bc
+    $ clang -O1 -emit-llvm Sample.c -c -o Sample.bc
 
 ##### Step 3.
     Now link the above two file as mentioned below:
-    llvm-link Corrupt.bc Sample.bc -o Final.bc
+    $ llvm-link Corrupt.bc Sample.bc -o Final.bc
 
 ##### Step 4.
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
-    opt -load <path-to-fault.so>/fault.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
+    $ opt -load <path-to-fault.so>/fault.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
     
     
 ##### Note: 
