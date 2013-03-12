@@ -14,7 +14,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 ##Installation
 ##### Step 1.
     $ cd where-you-want-kulfi-source-to-live  
-    $ git clone https://github.com/gaussers/KULFI.git
+    $ git clone https://github.com/vcsharma/KULFI.git
     
 ##### Step 2.
     $ cd KULFI/src  
