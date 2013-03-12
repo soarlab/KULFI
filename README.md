@@ -27,7 +27,8 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
     $ [sudo] make install
     
 ##### Note: 
-Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
+- Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
+- You could also use pre-compiled binary - faults.so, located at KULFI/bin.
 
 ##Steps to Execute
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
