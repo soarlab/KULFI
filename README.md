@@ -1,17 +1,17 @@
 KULFI
 =====
 
-##Introduction
+## 1. Introduction
 
 Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, please send it to: <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> / <a href="mailto:haran@cs.utah.edu"> Arvind Haran</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
 
-##Prerequisite
+## 2. Prerequisite
 - [LLVM version 3.2](http://llvm.org/releases/3.2/docs/ReleaseNotes.html)
 - [Clang version 3.2](http://llvm.org/releases/download.html#3.2)
 - Python 2.5+ ([2.7.3](http://www.python.org/getit/releases/2.7.3/) recommended)
 - Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
-##Installation
+## 3. Installation
 ##### Step 1: Download source code
     $ cd where-you-want-kulfi-source-to-live  
     $ git clone https://github.com/vcsharma/KULFI.git
@@ -30,7 +30,11 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
 - Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
-##Steps to Execute
+## 4. Steps to Execute
+#### 4.1 Automated Execution using Python Script (Recommended)
+
+
+#### 4.2 Manual Execution using built-in command line option
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
     $ clang -O1 -emit-llvm Corrupt.c -c -o Corrupt.bc
@@ -54,7 +58,7 @@ Now run the fault pass on "Final.bc" using below guideline. Refer to the "Comman
 Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt
     
 
-##Command Line Options
+## 5. Command Line Options
 
     -staticfault   - to select static fault injection 
     
@@ -75,5 +79,5 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
     -ijo           - [input: 0/1] [default input: 1] 1: exits after injecting first fault
                      0: considers all possible fault sites for fault injection
 
-## Additional Notes
+## 6. Additional Notes
 - None
