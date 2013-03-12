@@ -28,7 +28,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
     
 ##### Note: 
 - Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
-- You could also use pre-compiled binary - faults.so, located at KULFI/bin.
+- Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
 ##Steps to Execute
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
@@ -46,8 +46,9 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 ##### Step 4: Inject fault(s)!
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
-    $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1]
-    
+    $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
+    < Final.bc > Final-out.bc
+    Here "Final-out.bc" is the modified LLVM bit code with the required code instrumention to inject static/dynamic fault.
     
 ##### Note: 
 Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt
