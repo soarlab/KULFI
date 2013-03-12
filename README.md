@@ -32,9 +32,12 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 
 ## 4. Steps to Execute
 #### 4.1 Automated Execution using Python Script (Recommended)
-
+If steps mentioned in this section does not work for you then follow the manual steps mentioned in section 4.2
 
 #### 4.2 Manual Execution using built-in command line option
+If you face any issue while following steps in section 4.1, you could try below steps manually. In case, section 4.1
+worked for you, then you could skip this section.
+
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
     $ clang -O1 -emit-llvm Corrupt.c -c -o Corrupt.bc
@@ -47,17 +50,20 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
     Now link the above two file as mentioned below:
     $ llvm-link Corrupt.bc Sample.bc -o Final.bc
 
-##### Step 4: Inject fault(s)!
+#### 4.3: Inject fault(s)!
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
     $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
     < Final.bc > Final-out.bc
     Here "Final-out.bc" is the modified LLVM bit code with the required code instrumention to inject static/dynamic fault.
     
+#### 4.4: Execute
+
+
+#### 4.5: Generate Statistics
 ##### Note: 
 Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt
     
-
 ## 5. Command Line Options
 
     -staticfault   - to select static fault injection 
@@ -79,5 +85,7 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
     -ijo           - [input: 0/1] [default input: 1] 1: exits after injecting first fault
                      0: considers all possible fault sites for fault injection
 
-## 6. Additional Notes
+## 6. Examples
+
+## 7. Additional Notes
 - None
