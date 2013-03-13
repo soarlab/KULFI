@@ -11,7 +11,9 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Python 2.5+ ([2.7.3](http://www.python.org/getit/releases/2.7.3/) recommended)
 - Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
-## 3. Installation
+## 3. List of files
+
+## 4. Installation
 ##### Step 1: Download source code
     $ cd where-you-want-kulfi-source-to-live  
     $ git clone https://github.com/vcsharma/KULFI.git
@@ -30,7 +32,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
 - Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
-## 4. Steps to Execute
+## 5. Steps to Execute
 
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
@@ -44,7 +46,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
     Now link the above two file as mentioned below:
     $ llvm-link Corrupt.bc Sample.bc -o Final.bc
 
-##### Step4: Inject fault(s)!
+##### Step 4: Inject fault(s)!
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
     $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
@@ -53,7 +55,7 @@ Now run the fault pass on "Final.bc" using below guideline. Refer to the "Comman
     static/dynamic fault.
 Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-with-opt) to know how to run an LLVM pass using opt. 
 
-#### Step4: Execute
+#### Step 5: Execute
     Use lli to execute the LLVM bitcodes "Final.bc" and "Final-corrupt.bc" as mentioned below:
     $ lli Final.bc > Final.out
     $ lli Final-corrupt.bc > Final-corrupt.out
@@ -62,7 +64,7 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
 For more details on how to execute LLVM bitcode, refer to the [link](http://llvm.org/docs/GettingStarted.html#an-example-using-the-llvm-tool-chain).  
 
     
-## 5. Command Line Options
+## 6. Command Line Options
 
     -staticfault   - to select static fault injection 
     
@@ -83,7 +85,7 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
     -ijo           - [input: 0/1] [default input: 1] 1: exits after injecting first fault
                      0: considers all possible fault sites for fault injection
 
-## 6. Examples
+## 7. Examples
 
-## 7. Known Bugs/Limitations
+## 8. Known Bugs/Limitations
 - Current version of KULFI support fault injection into data register of only integer type. We plan to support float type in future.
