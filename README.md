@@ -84,7 +84,7 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
                      0: considers all possible fault sites for fault injection
 
 ## 6. Examples
-Refer to KULFI/example directory. We have different sorting algotithms which could be tried 
+Refer to KULFI/example directory. We have different sorting algorithms which could be tried 
 for error injection. Below is an example of error injection for bubblesort implementation.
 
     $ cd to KULFI/examples/sorting/bubblesort
