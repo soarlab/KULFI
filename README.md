@@ -97,8 +97,12 @@ for error injection. Below is an example of error injection for bubblesort imple
 Sample Command Line to execute
 
     $ python kulfi.py bubblesort 2 12 1 1 0 1
+
+This implies that 
     To clean the directory type:
     $ python kulfi.py clean
+    
+
     
 
 ## 8. Known Bugs/Limitations
