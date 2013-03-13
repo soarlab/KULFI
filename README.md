@@ -11,9 +11,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Python 2.5+ ([2.7.3](http://www.python.org/getit/releases/2.7.3/) recommended)
 - Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
-## 3. List of files
-
-## 4. Installation
+## 3. Installation
 ##### Step 1: Download source code
     $ cd where-you-want-kulfi-source-to-live  
     $ git clone https://github.com/vcsharma/KULFI.git
@@ -32,7 +30,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
 - Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
-## 5. Steps to Execute
+## 4. Steps to Execute
 
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
@@ -64,7 +62,7 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
 For more details on how to execute LLVM bitcode, refer to the [link](http://llvm.org/docs/GettingStarted.html#an-example-using-the-llvm-tool-chain).  
 
     
-## 6. Command Line Options
+## 5. Command Line Options
 
     -staticfault   - to select static fault injection 
     
@@ -85,7 +83,7 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
     -ijo           - [input: 0/1] [default input: 1] 1: exits after injecting first fault
                      0: considers all possible fault sites for fault injection
 
-## 7. Examples
+## 6. Examples
 Refer to KULFI/example directory. We have different sorting algotithms which could be tried 
 for error injection. Below is an example of error injection for bubblesort implementation.
 
@@ -97,13 +95,9 @@ for error injection. Below is an example of error injection for bubblesort imple
 Sample Command Line to execute
 
     $ python kulfi.py bubblesort 2 12 1 1 0 1
-
-This implies that 
     To clean the directory type:
     $ python kulfi.py clean
     
 
-    
-
-## 8. Known Bugs/Limitations
+## 7. Known Bugs/Limitations
 - Current version of KULFI supports fault injection into data register of only integer type. We plan to support float type in future.
