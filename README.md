@@ -99,7 +99,7 @@ Sample Command Line to execute
 This instructs KULFI to look for bubblesort.c and run 2 iterations of the source code after fault injection. The specifics of the fault injection being: A dynamic fault with fault probability 12% injected only once in the data registers.
 The results of the fault injection are categorized into silent data corruptions, benign faults, out of bound accesses and segmentation faults. The fault statistics are available in bubblesort/stats.txt after execution.
 
-To clean the directory type
+To clean the directory, type:
 
     $ python kulfi.py clean
     
