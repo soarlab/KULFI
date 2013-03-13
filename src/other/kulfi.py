@@ -50,8 +50,8 @@ def geninput(size):
 if __name__=="__main__":
         if(sys.argv[1]=="clean"):
 		os.system("rm *.bc *.txt");
-		os.system("rm -rf faulty_bubblesort/");
-		os.system("rm -rf actual_bubblesort/");
+		os.system("rm -rf faulty_"+sys.argv[1]+"/");
+		os.system("rm -rf actual_"+sys.argv[1]+"/");
                 sys.exit()
 
 	if(len(sys.argv) !=8 or (len(sys.argv)==2 and sys.argv[1]=="--help")):
