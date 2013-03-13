@@ -88,7 +88,7 @@ Refer to KULFI/example directory. We have different sorting algotithms which cou
 for error injection. Below is an example of error injection for bubblesort implementation.
 
     $ cd to KULFI/examples/sorting/bubblesort
-    $ python3 kulfi.py <source-code-name-without-extension> <number-of-iterations> 
+    $ python kulfi.py <source-code-name-without-extension> <number-of-iterations> 
       <fault-probability, 1-100> <inject-once, 0/1> <static-fault/dynamic-fault - 0/1> 
       <pointer-error - 0/1> <data-error - 0/1>
  
