@@ -86,6 +86,20 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
                      0: considers all possible fault sites for fault injection
 
 ## 7. Examples
+Refer to KULFI/example directory. We have different sorting algotithms which could be tried 
+for error injection. Below is an example of error injection for bubblesort implementation.
+
+    $ cd to KULFI/examples/sorting/bubblesort
+    $ python3 kulfi.py <source-code-name-without-extension> <number-of-iterations> 
+      <fault-probability, 0-100> <inject-once, 0/1> <static-fault/dynamic-fault - 0/1> 
+      <pointer-error - 0/1> <data-error - 0/1>
+ 
+Sample Command Line to execute
+
+    $ python kulfi.py bubblesort 2 12 1 1 0 1
+    To clean the directory type:
+    $ python kulfi.py clean
+    
 
 ## 8. Known Bugs/Limitations
 - Current version of KULFI support fault injection into data register of only integer type. We plan to support float type in future.
