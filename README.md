@@ -3,7 +3,7 @@ KULFI
 #### Version: beta version
 ## 1. Introduction
 
-Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, please send it to: <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> / <a href="mailto:haran@cs.utah.edu"> Arvind Haran</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
+Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, the fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, please send it to: <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> / <a href="mailto:haran@cs.utah.edu"> Arvind Haran</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
 
 ## 2. Prerequisite
 - [LLVM version 3.2](http://llvm.org/releases/3.2/docs/ReleaseNotes.html)
@@ -91,7 +91,7 @@ for error injection. Below is an example of error injection for bubblesort imple
 
     $ cd to KULFI/examples/sorting/bubblesort
     $ python3 kulfi.py <source-code-name-without-extension> <number-of-iterations> 
-      <fault-probability, 0-100> <inject-once, 0/1> <static-fault/dynamic-fault - 0/1> 
+      <fault-probability, 1-100> <inject-once, 0/1> <static-fault/dynamic-fault - 0/1> 
       <pointer-error - 0/1> <data-error - 0/1>
  
 Sample Command Line to execute
@@ -102,4 +102,4 @@ Sample Command Line to execute
     
 
 ## 8. Known Bugs/Limitations
-- Current version of KULFI support fault injection into data register of only integer type. We plan to support float type in future.
+- Current version of KULFI supports fault injection into data register of only integer type. We plan to support float type in future.
