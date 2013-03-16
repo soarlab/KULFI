@@ -2,7 +2,7 @@
 /* Name        : Corrupt.c                                                                 */
 /* Description : This file contains code for corrupting data and pointer. It is linked at  */
 /*               compiled time to the target code where fault(s) need to be injected       */
-/*											   */
+/*   										   */
 /* Owner       : This tool is owned by Gauss Research Group at School of Computing,        */
 /*               University of Utah, Salt Lake City, USA.                                  */
 /*               Please send your queries to: gauss@cs.utah.edu                            */
@@ -23,12 +23,12 @@ int ijo_flag=0;
 int ijo_flagA=0;
 int fault_injection_count=0;
 
-int corrupt(int fault_index, int inject_once, int probablity, int byte_val, int inst_data){
+int corrupt(int fault_index, int inject_once, int ef, int tf, int byte_val, int inst_data){
    if(rand_flag){
       srand(time(NULL));
       rand_flag=0;
    }    
-   unsigned int rp = rand()%100+1;
+   int rp = rand()%tf+1;
 
    if(inject_once == 1)
      ijo_flag=1;
@@ -36,15 +36,15 @@ int corrupt(int fault_index, int inject_once, int probablity, int byte_val, int 
    if(ijo_flag == 1 && fault_injection_count>0){
        return inst_data;        
    }
-   if(rp>probablity){
+   if(rp>ef){
        return inst_data;
    }
    printf("\n/*********************************Start**************************************/");
    printf("\nSucceffully injected 32-bit data error!!");
    printf("\nInject Once Flag is : %d",inject_once);
-   printf("\nUser defined probablity is: %d",probablity);
+   printf("\nUser defined probablity is: %d/%d",ef,tf);
    printf("\nByte position is: %d",byte_val);
-   printf("\nChosen random probablity is: %u",rp);   
+   printf("\nChosen random probablity is: %d/%d",rp,tf);   
    printf("\nIndex of the fault site : %d",fault_index);
    printf("\n/*********************************End**************************************/\n");
    unsigned int bPos=(8*byte_val)+rand()%8;
@@ -57,29 +57,30 @@ int corrupt(int fault_index, int inject_once, int probablity, int byte_val, int 
    
 }
  
-int* corrupt_Add(int fault_index, int inject_once, int probablity, int byte_val, int* inst_add){
+int* corrupt_Add(int fault_index, int inject_once, int ef, int tf,  int byte_val, int* inst_add){
    if(rand_flagA){
       srand(time(NULL));
       rand_flagA=0;
    }    
-   unsigned int rp = rand()%100+1;
+   int rp = rand()%tf+1;
    if(inject_once == 1)
      ijo_flagA=1;
 
    if(ijo_flagA == 1 && fault_injection_count>0)
        return inst_add;           
 
-   if(rp>probablity)
+   if(rp>ef)
        return inst_add;
    
    printf("\n/*********************************Start**************************************/");
-   printf("\nSucceffully injected pointer error!!");
+   printf("\nSucceffully injected 32-bit data error!!");
    printf("\nInject Once Flag is : %d",inject_once);
-   printf("\nUser defined probablity is: %d",probablity);
+   printf("\nUser defined probablity is: %d/%d",ef,tf);
    printf("\nByte position is: %d",byte_val);
-   printf("\nChosen random probablity is: %u",rp);   
+   printf("\nChosen random probablity is: %d/%d",rp,tf);   
    printf("\nIndex of the fault site : %d",fault_index);
    printf("\n/*********************************End**************************************/\n");
+
    unsigned int bPos=(8*byte_val)+rand()%8;
 
    fault_injection_count++;
@@ -90,12 +91,12 @@ int* corrupt_Add(int fault_index, int inject_once, int probablity, int byte_val,
    
 }
 
-long long corruptL(int fault_index, int inject_once, int probablity, int byte_val, long long inst_data){
+long long corruptL(int fault_index, int inject_once, int ef, int tf,  int byte_val, long long inst_data){
    if(rand_flagL){
       srand(time(NULL));
       rand_flagL=0;
    }    
-   unsigned int rp = rand()%100+1;
+   int rp = rand()%tf+1;
 
    if(inject_once == 1)
      ijo_flag=1;
@@ -103,18 +104,20 @@ long long corruptL(int fault_index, int inject_once, int probablity, int byte_va
    if(ijo_flag == 1 && fault_injection_count>0)
        return inst_data;        
    
-   if(rp>probablity)
+   if(rp>ef)
        return inst_data;
    
    printf("\n/*********************************Start**************************************/");
-   printf("\nSucceffully injected 64-bit data error!!");
+   printf("\nSucceffully injected 32-bit data error!!");
    printf("\nInject Once Flag is : %d",inject_once);
-   printf("\nUser defined probablity is: %d",probablity);
+   printf("\nUser defined probablity is: %d/%d",ef,tf);
    printf("\nByte position is: %d",byte_val);
-   printf("\nChosen random probablity is: %u",rp);
+   printf("\nChosen random probablity is: %d/%d",rp,tf);   
    printf("\nIndex of the fault site : %d",fault_index);
-   unsigned int bPos=(8*byte_val)+rand()%8;
    printf("\n/*********************************End**************************************/\n");
+
+   unsigned int bPos=(8*byte_val)+rand()%8;
+
    fault_injection_count++;
    if ((inst_data>>bPos)&0x1)
      return inst_data & (long long) (~(0x1<< (rand()%64)));   
