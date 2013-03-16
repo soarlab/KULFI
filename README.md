@@ -47,7 +47,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 ##### Step 4: Inject fault(s)!
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
     
-    $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-fp N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
+    $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-ef N] [-tf N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
     < Final.bc > Final-corrupt.bc
     Here "Final-corrupt.bc" is the modified LLVM bit code with the required code instrumention to inject 
     static/dynamic fault.
@@ -68,8 +68,12 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
     
     -dynfault      - to select dynamic fault injection
     
-    -fp            - [input range: 1-100] [default input: 100] specifies the probablity 
-                     of injecting the fault
+    -ef            - [input range: >=1] [default input: 100] specifies the expected 
+                     number of faults to be injected. It is used in probbality cal-
+                     culation.
+                    
+    -tf            - [input range: >=1] [default input: 100] specifies the total nu-
+                     mber of fault sites. It is used in the probablity calculation.
                      
     -b             - [input range: 0-7] [default input: 0] specifies which byte of the 
                      data register to consider for fault injection.
