@@ -32,9 +32,8 @@
 
 using namespace llvm;
 
-Module* makeLLVMModule();
-
-static cl::opt<int> f_prob("fp", cl::desc("User Defined Fault Probablity"), cl::value_desc("1-100"), cl::init(100), cl::ValueRequired);
+static cl::opt<int> ef("ef", cl::desc("expected number of fault occurence"), cl::value_desc("Any value greater than 1 and less than or equal to tf"), cl::init(100), cl::ValueRequired);
+static cl::opt<int> tf("tf", cl::desc("Total number of fault occurence"), cl::value_desc("Any value greater than 1 and less than or equal to tf"), cl::init(100), cl::ValueRequired);
 static cl::opt<int> byte_val("b", cl::desc("Which byte to consider for fault injection"), cl::value_desc("0-3"), cl::init(0), cl::ValueRequired);
 static cl::opt<bool> data_err("de", cl::desc("Inject Data Register Error"), cl::value_desc("0/1"), cl::init(1), cl::ValueRequired);
 static cl::opt<int> ijo("ijo", cl::desc("Inject Error Only Once"), cl::value_desc("0/1"), cl::init(1), cl::ValueRequired);
@@ -76,8 +75,8 @@ bool InjectError_DataReg(Instruction *I)
 {
     /*generate random probablity and check it against user defined probablity*/
     srand(time(NULL));
-    int p=(rand()%100)+1;
-    if(p>f_prob)        
+    int p=(rand()%tf)+1;
+    if(p>ef)        
         return false;
     
     /*Locate the instruction I in the basic block BB*/
@@ -119,8 +118,8 @@ bool InjectError_PtrError(Instruction *I)
 {
     /*generate random probablity and check it against user defined probablity*/
     srand(time(NULL));
-    int p=(rand()%100)+1;
-    if(p>f_prob)        
+    int p=(rand()%tf)+1;
+    if(p>ef)        
         return false;
 
     /*Locate the instruction I in the basic block BB*/
@@ -206,7 +205,8 @@ bool InjectError_DataReg_Dyn(Instruction *I, int fault_index)
     std::vector<Value*> args;
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),fault_index));
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),ijo));
-    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),f_prob));
+    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),ef));
+    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),tf));
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),byte_val));
 
     /*Choose a fault site in StoreInst and insert Corrupt function call*/
@@ -294,7 +294,8 @@ bool InjectError_PtrError_Dyn(Instruction *I, int fault_index)
     std::vector<Value*> args;
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),fault_index));
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),ijo));
-    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),f_prob));
+    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),ef));
+    args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),tf));
     args.push_back(ConstantInt::get(IntegerType::getInt32Ty(getGlobalContext()),byte_val));
 
     /*Locate the instruction I in the basic block BB*/  
@@ -364,7 +365,7 @@ namespace {
             {	
                 /*Check for assertion violation(s)*/
                 assert(byte_val<=7 && byte_val>=0);
-                assert(f_prob<=100 && f_prob>0);
+                assert(ef>=1 && tf>=1 && ef<=tf);
                 assert(ijo==1 || ijo==0);
                 assert(ptr_err==1 || ptr_err==0);
                 assert(data_err==1 || data_err==0);
@@ -463,7 +464,7 @@ namespace {
             {	
                 /*Check for assertion violation(s)*/
                 assert(byte_val<=7 && byte_val>=0);
-                assert(f_prob<=100 && f_prob>0);
+                assert(ef>=1 && tf>=1 && ef<=tf);
                 assert(ijo==1 || ijo==0);
                 assert(ptr_err==1 || ptr_err==0);
                 assert(data_err==1 || data_err==0);
@@ -541,5 +542,4 @@ char staticfault::ID = 0;
 static RegisterPass<staticfault> F1("staticfault", "Static Fault Injection emulating permanent hardware error behavior");
 
 /******************************************************************************************************************************/
-
 
