@@ -110,3 +110,4 @@ To clean the directory, type:
 
 ## 7. Known Bugs/Limitations
 - Current version of KULFI supports fault injection into data register of only integer type. We plan to support float type in future.
+- Only C is supported by KULFI. C++ is currently not supported.
