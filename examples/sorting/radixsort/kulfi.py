@@ -54,25 +54,23 @@ if __name__=="__main__":
 		os.system("rm -rf actual_*");
                 sys.exit()
 
-	if(len(sys.argv) !=8 or (len(sys.argv)==2 and sys.argv[1]=="--help")):
+	if(len(sys.argv) !=9 or (len(sys.argv)==2 and sys.argv[1]=="--help")):
 		print("Execution format: python3 kulfi.py <Source code name without extension> <number of iterations> <fault prob 0-100> <inject once 0/1> <static fault or dynamic fault 0/1> <pointer error 0/1> <data error 0/1>")
 		sys.exit()
 
 	progname=sys.argv[1]
 	numiter=int(sys.argv[2])
-	fprob=int(sys.argv[3])
-	injectonce=int(sys.argv[4])
-	injecttype=int(sys.argv[5])
-	pointerror=int(sys.argv[6])
-	dataerror=int(sys.argv[7])
-	print(progname, numiter, fprob, injectonce, injecttype, pointerror, dataerror)
+	ef=int(sys.argv[3])
+	tf=int(sys.argv[4])
+	injectonce=int(sys.argv[5])
+	injecttype=int(sys.argv[6])
+	pointerror=int(sys.argv[7])
+	dataerror=int(sys.argv[8])
+	print(progname, numiter, ef, tf, injectonce, injecttype, pointerror, dataerror)
 	errflag=1
 	
 	if(not os.path.exists(progname+".c")):
 		print("Source file not in current directory")
-		errflag=0
-	if(fprob not in range(0,101)):
-		print("Fault probability must be within 0 and 100")
 		errflag=0
 	if(injectonce != 0 and injectonce!=1):
 		print("Enter 0 or 1 for injectonce flag")
@@ -105,9 +103,9 @@ if __name__=="__main__":
 	os.system("llvm-link Corrupt.bc "+sys.argv[1]+".bc -o linked.bc")
 	
 	if(injecttype):
-		os.system("opt -load ./faults.so -dynfault -fp "+str(fprob)+" -pe "+str(pointerror)+" -de "+str(dataerror)+" -b 0 -ijo "+str(injectonce)+" <linked.bc> final.bc")
+		os.system("opt -load ./faults.so -dynfault -ef "+str(ef)+" -tf "+str(tf)+" -pe "+str(pointerror)+" -de "+str(dataerror)+" -b 0 -ijo "+str(injectonce)+" <linked.bc> final.bc")
 	else:
-		os.system("opt -load ./faults.so -staticfault -fp "+str(fprob)+" -pe "+str(pointerror)+" -de "+str(dataerror)+" -b 0 -ijo "+str(injectonce)+" <linked.bc> final.bc")
+		os.system("opt -load ./faults.so -staticfault -ef "+str(ef)+" -tf "+str(tf)+ "-pe "+str(pointerror)+" -de "+str(dataerror)+" -b 0 -ijo "+str(injectonce)+" <linked.bc> final.bc")
 
 	stats=open("stats.txt","w")
 	segiters=open("segiter.txt","w")
