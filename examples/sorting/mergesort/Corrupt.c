@@ -48,11 +48,11 @@ int corrupt(int fault_index, int inject_once, int ef, int tf, int byte_val, int 
    printf("\nChosen random probablity is: %d/%d",rp,tf);   
    printf("\nIndex of the fault site : %d",fault_index);
    printf("\n/*********************************End**************************************/\n");
-   if(bPos>3)
+  if(byte_val>3)
       bPos=(8*(byte_val-4))+rand()%8;
    else
       bPos=(8*byte_val)+rand()%8;
-
+      
    fault_injection_count++;
    if ((inst_data>>bPos)&0x1)
      return inst_data & (~(0x1<< (rand()%32)));   
@@ -86,7 +86,7 @@ int* corrupt_Add(int fault_index, int inject_once, int ef, int tf,  int byte_val
    printf("\nIndex of the fault site : %d",fault_index);
    printf("\n/*********************************End**************************************/\n");
 
-   if(bPos>3)
+  if(byte_val>3)
       bPos=(8*(byte_val-4))+rand()%8;
    else
       bPos=(8*byte_val)+rand()%8;
