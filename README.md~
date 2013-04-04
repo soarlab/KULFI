@@ -122,6 +122,8 @@ Sample Command Line to execute
 
     $ python sorting.py bubblesort/bubblesort.c ../../../src/other/Corrupt.c ../../../bin/faults.so 2 0 10 100 1 1 0 1 0 "bubbleSort"
 
+    $ python sorting.py clean  :cleans the directory
+
     $ python sorting.py --help :prints the help message
 
 This instructs KULFI to look for bubblesort.c and run 2 iterations of the source code after fault injection. The specifics of the fault injection being: A dynamic fault with fault probability 12% injected only once in the data registers.
@@ -129,7 +131,7 @@ The results of the fault injection are categorized into silent data corruptions,
 
 To clean the directory, type:
 
-    $ python sorting.py clean
+    $ python kulfi.py clean
     
 
 ## 7. Known Bugs/Limitations
