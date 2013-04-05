@@ -108,15 +108,15 @@ for error injection. Below is an example of error injection for bubblesort imple
       Arg1: <source_file>            	    type: string
       Arg2: <Corrupt.c file>        	    type: string
       Arg3: <faults.so file>        	    type: string
-      Arg4: <iteration>	  	    	    type: integer
-      Arg5: <byte_position>	  	    type: integer
+      Arg4: <iteration>	  	    	        type: integer
+      Arg5: <byte_position>	  	            type: integer
       Arg6: <expected fault count>  	    type: integer
-      Arg7: <total fault count>           type: integer
-      Arg8: <inject_once flag>            type: bool(0/1)
-      Arg9: <static_fault/dynamic_fault>  type: bool(0/1)
+      Arg7: <total fault count>             type: integer
+      Arg8: <inject_once flag>              type: bool(0/1)
+      Arg9: <static_fault/dynamic_fault>    type: bool(0/1)
       Arg10: <inject_pointer_error>  	    type: bool(0/1)
-      Arg11: <inject_data_error>  	    type: bool(0/1)
-      Arg12: <print_fault_site>  	    type: bool(0/1)
+      Arg11: <inject_data_error>  	        type: bool(0/1)
+      Arg12: <print_fault_site>  	        type: bool(0/1)
       Arg13: <function_name>  	            type: string
  
 Sample Command Line to execute
