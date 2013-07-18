@@ -1,17 +1,22 @@
 KULFI
 =====
 #### Version: beta 2 version
-## 1. Introduction
+## Introduction
 
 Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, the fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, please send it to: <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> / <a href="mailto:haran@cs.utah.edu"> Arvind Haran</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
 
-## 2. Prerequisite
+## List of Contributors
+1. <a href="mailto:vcsharma@cs.utah.edu">Vishal Sharma</a> (Phd Student at School of Computing, University of Utah)
+2. <a href="mailto:haran@cs.utah.edu">Arvind Haran</a> (Masters student at School of Computing, University of Utah)
+3. <a href="mailto:suichen6@gmail.com">Sui Chen</a> (Phd Student at Department of Computer Science, Louisiana State University)
+
+## Prerequisite
 - [LLVM version 3.2](http://llvm.org/releases/3.2/docs/ReleaseNotes.html)
 - [Clang version 3.2](http://llvm.org/releases/download.html#3.2)
 - Python 2.5+ ([2.7.3](http://www.python.org/getit/releases/2.7.3/) recommended)
 - Unix like operating system (Ubuntu, Debian) - The current version of KULFI is tested on Ubuntu 12.04 LTS
 
-## 3. Installation
+## Installation
 ##### Step 1: Download source code
     $ cd where-you-want-kulfi-source-to-live  
     $ git clone https://github.com/vcsharma/KULFI.git
@@ -30,7 +35,7 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 - Please refer to the [link] (http://llvm.org/docs/WritingAnLLVMPass.html#setting-up-the-build-environment) to get details on how to set up the build environment to compile an LLVM pass.
 - Alternatively, you could use pre-compiled binary - faults.so, located at KULFI/bin.
 
-## 4. Steps to Execute
+## Steps to Execute
 
 ##### Step 1: Compile "Corrupt.c" at KULFI/src/other
     Before running the fault pass, first compile the Corrupt.c using below command:
@@ -63,7 +68,7 @@ Refer to the [link](http://llvm.org/docs/WritingAnLLVMPass.html#running-a-pass-w
 For more details on how to execute LLVM bitcode, refer to the [link](http://llvm.org/docs/GettingStarted.html#an-example-using-the-llvm-tool-chain).  
 
     
-## 5. Command Line Options
+## Command Line Options
 
     -staticfault   - to select static fault injection 
     
@@ -98,7 +103,7 @@ For more details on how to execute LLVM bitcode, refer to the [link](http://llvm
                      injected. 0: disable fault site printing mode. To inject errors make 
                      sure that this mode is disabled.
                      
-## 6. Examples
+## Examples
 Refer to KULFI/example directory. We have different sorting algorithms which could be tried 
 for error injection. Below is an example of error injection for bubblesort implementation.
 
@@ -133,11 +138,11 @@ To clean the directory, type:
     $ python sorting.py clean
     
 
-## 7. Known Bugs/Limitations
+## Known Bugs/Limitations
 - Only C is supported by KULFI. C++ is currently not supported.
 
 
-## 8. List of Changes
+## List of Changes
 Beta 2 release
 - Fixes issue #5: Added command line option "-pfs" to print fault sites
 - Fixes issue #3: Added command line option "-fn" to support selecting functions for error injection from command line
