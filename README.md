@@ -10,6 +10,18 @@ Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault
 2. <a href="mailto:haran@cs.utah.edu">Arvind Haran</a> (Masters student at School of Computing, University of Utah)
 3. <a href="mailto:suichen6@gmail.com">Sui Chen</a> (Phd Student at Department of Computer Science, Louisiana State University)
 
+## Cite our work
+When you use KULFI in your research work, please cite our work using below citation. More information about the paper could be found [here](http://soarlab.org/2013/08/towards-formal-approaches-to-system-resilience/)
+
+@inproceedings{prdc2013-shrg,
+    author = {Vishal Chandra Sharma and Arvind Haran and Zvonimir Rakamari\'c and Ganesh Gopalakrishnan},
+    title = {Towards Formal Approaches to System Resilience},
+    booktitle = {Proceedings of the 19th IEEE Pacific Rim International Symposium on Dependable Computing (PRDC)},
+    year = {2013},
+    note = {to appear},
+}
+
+
 ## Prerequisite
 - [LLVM version 3.2](http://llvm.org/releases/3.2/docs/ReleaseNotes.html)
 - [Clang version 3.2](http://llvm.org/releases/download.html#3.2)
