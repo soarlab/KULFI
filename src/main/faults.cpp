@@ -1253,7 +1253,6 @@ bool InjectError_PtrError_Dyn(Instruction *I, int fault_index)
 /******************************************************************************************************************************/
 
 // Use-def chain graph information
-void recordUseDefChain(Module& M);
 
 /*Dynamic Fault Injection LLVM Pass*/
 namespace {
@@ -1266,8 +1265,6 @@ public:
 		g_irbuilder = new IRBuilder<true, ConstantFolder, IRBuilderDefaultInserter<true> >(getGlobalContext());
 		readFunctionInjWhitelist();
 		errs() << "Fault injection white list read\n";
-		recordUseDefChain(M);
-		errs() << "Def-use chain recorded\n";
 		splitBBOnCallInsts(M);
 		errs() << "BBs split on CallInsts\n";
 		addBBEntryCalls(M);
