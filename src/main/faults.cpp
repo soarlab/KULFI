@@ -168,7 +168,6 @@ std::map<const BasicBlock*, Value*> bb_to_pred;
 // There should not be "incrementFaultSiteCount"s for
 // "alternative BB" and "next BB"'s!
 std::set<BasicBlock*> blacklisted_bbs;
-void writeFaultSiteDOTGraph();
 
 // Don't use this routine. It's painfully slow!
 static void logFaultSiteInfo(const Instruction* inst, int fault_index, FaultType fault_type) {
@@ -1508,8 +1507,6 @@ public:
 		}
 
 		// Print out fault site statistics.
-		writeFaultSiteDOTGraph();
-
 		return false;
 	}/*end function definition*/
 };/*end class definition*/
