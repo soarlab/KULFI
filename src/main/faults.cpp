@@ -133,8 +133,16 @@ enum FaultType {
 static std::map<int, std::pair<std::string, FaultType> > g_fault_sites;
 
 std::set<Instruction*> corrupted_ptrs;
+std::set<BasicBlock*> call_next_bbs; // The BB that follows a Call BB. 
 std::map<BasicBlock*, unsigned> bb_fs_counts; // Fault Site count of each BB
 std::map<BasicBlock*, std::string> bb_names; // BB names.
+
+static std::string instToString(const Instruction* inst) {
+	std::string str;
+	raw_string_ostream os(str);
+	inst->print(os, NULL);
+	return str;
+}
 
 // Use-def graph
 // The same pointer would always point to the [source] (uninjected) instruction
@@ -254,6 +262,7 @@ static void appendInstCountCalls(Module& M) {
 			}
 			size = bb_fs_counts[bb];
 			if(size < 1) continue;
+			if(call_next_bbs.find(bb) != call_next_bbs.end()) { size = size + 1; }
 			std::vector<Value*> args;
 			assert(bb_names.find(bb) != bb_names.end());
 			std::string bbn = bb_names[bb];
@@ -410,8 +419,9 @@ static PHINode* createBranchForCorruptInst(Value* corrupted,
 	// AFTER:
 	// [  prevBB  ] [ injBB  (Corrupt) ] [  nextBB  ]
 	assert(itr != prevBB->end());
-	injBB  = prevBB->splitBasicBlock(split_at_inj);
-	nextBB = injBB ->splitBasicBlock(split_at_next);
+	std::string fn_name = prevBB->getParent()->getName();
+	injBB  = prevBB->splitBasicBlock(split_at_inj,  fn_name);
+	nextBB = injBB ->splitBasicBlock(split_at_next, fn_name);
 	blacklisted_bbs.insert(injBB);
 	blacklisted_bbs.insert(nextBB);
 	TerminatorInst* prevBBT_old = prevBB->getTerminator();
@@ -500,11 +510,13 @@ static void splitBBOnCallInsts(Module& M) {
 			} while(false);
 
 			if(is_found) {
-				BasicBlock* callBB = (*currBB).splitBasicBlock(itr_callI, "callBB");
+				std::string x = F.getName();
+				BasicBlock* callBB = (*currBB).splitBasicBlock(itr_callI, x + "_callBB");
 				blacklisted_bbs.insert(callBB);
 				BasicBlock::iterator next2 = callBB->begin();
 				next2++;
-				BasicBlock* nextStart = callBB->splitBasicBlock(next2, "nextCallBB");
+				BasicBlock* nextStart = callBB->splitBasicBlock(next2, x + "_nextCallBB");
+				call_next_bbs.insert(nextStart);
 				bool is_ok = false;
 				for(Function::iterator itr = F.begin(); itr!=F.end(); itr++) {
 					if((&(*itr)) == nextStart) {
@@ -531,9 +543,7 @@ void addBBEntryCalls(Module& M) {
 		for(; it2 != F.end(); it2++) {
 			BasicBlock* pBB = &(*it2);
 			std::string bbname, bbname1;
-			if(pBB->getName().size() > 0) {
-				bbname = pBB->getName();
-			} else {
+			{
 				len = strlen(F.getName().data());
 				assert(len <= LEN); 
 				sprintf(tmp, "%s_%u", F.getName().data(), fnbbcnt);
@@ -722,7 +732,8 @@ bool InjectError_DataReg_Dyn(Instruction *I, int fault_index)
 					if((&*itr) == cmpOp) break;
 				split_at_inj = itr;
 				assert(split_at_inj  != prevBB->end());
-				injBB = prevBB->splitBasicBlock(split_at_inj);
+				std::string fn_name = BB->getParent()->getName();
+				injBB = prevBB->splitBasicBlock(split_at_inj, fn_name);
 
 				Instruction* inj_insert_here = &(injBB->front());
 
@@ -757,7 +768,7 @@ bool InjectError_DataReg_Dyn(Instruction *I, int fault_index)
 					if((&*split_at_next) == inj_insert_here) break;
 					split_at_next++;
 				}
-				nextBB = injBB->splitBasicBlock(split_at_next);
+				nextBB = injBB->splitBasicBlock(split_at_next, fn_name);
 				corruptValPhi = PHINode::Create(the_op_type, 0, "BBBB",
 					&(nextBB->front()));
 				corruptValPhi->addIncoming(tcmpOp->getOperand(opPos), prevBB);
@@ -825,13 +836,14 @@ bool InjectError_DataReg_Dyn(Instruction *I, int fault_index)
 			CallI = CallInst::Create(func_corruptFloatData_64bit,args,"call_corruptFloatData_64bit",I);
 			assert(CallI);
 			CallI->setCallingConv(CallingConv::C);
-		} else if(tcmpOp->getOperand(opPos)->getType()->isX86_FP80Ty()) {
-			errs() << "[DataReg_Dyn] FP80\n";
-			CallI = CallInst::Create(func_corruptFloatData_80bit,args,"call_corruptfloatData_80bit",I);
-			assert(CallI);
-			CallI->setCallingConv(CallingConv::C);
+		} else {
+			if(tcmpOp->getOperand(opPos)->getType()->isX86_FP80Ty()) {
+				errs() << "[DataReg_Dyn] FP80\n";
+				CallI = CallInst::Create(func_corruptFloatData_80bit,args,"call_corruptfloatData_80bit",I);
+				assert(CallI);
+				CallI->setCallingConv(CallingConv::C);
+			}
 		}
-		
 		if(CallI) {
 #ifdef IGNORE_20130723_CHANGES
 			Value* corruptVal = &(*CallI);
@@ -1253,6 +1265,7 @@ bool InjectError_PtrError_Dyn(Instruction *I, int fault_index)
 /******************************************************************************************************************************/
 
 // Use-def chain graph information
+void recordUseDefChain(Module& M);
 
 /*Dynamic Fault Injection LLVM Pass*/
 namespace {
@@ -1265,6 +1278,8 @@ public:
 		g_irbuilder = new IRBuilder<true, ConstantFolder, IRBuilderDefaultInserter<true> >(getGlobalContext());
 		readFunctionInjWhitelist();
 		errs() << "Fault injection white list read\n";
+		recordUseDefChain(M);
+		errs() << "Def-use chain recorded\n";
 		splitBBOnCallInsts(M);
 		errs() << "BBs split on CallInsts\n";
 		addBBEntryCalls(M);
@@ -1817,3 +1832,116 @@ const char* getMyTypeName(const Value* v) {
 		return "Alloca";
 	} else return "--";
 }
+
+
+void recordUseDefChain(Module& M) {
+	errs() << "Backup ...... \n";
+	unsigned long nodeid = 0;
+	Module::FunctionListType& funcList = M.getFunctionList();
+
+	// Pass 1: Give every instruction a node ID (node in the graph for visualization)
+	for(Module::iterator itr = funcList.begin(); itr != funcList.end(); itr++) {
+		Function& F = *itr;
+		std::string s = F.getName().str();
+		const Function* pF = (const Function*)(&F);
+		if(isFunctionNameBlacklisted(s.c_str()) || (!shouldInjectFunction(pF))) {
+			continue;
+		}
+		std::list<const BasicBlock*> bbs;
+		Function::BasicBlockListType& bbList = F.getBasicBlockList();
+		for(Function::iterator itr1 = bbList.begin(); itr1 != bbList.end(); itr1++) {
+			BasicBlock& BB = *itr1;
+			BasicBlock* pBB = &(BB);
+			bbs.push_back((const BasicBlock*)pBB);
+			std::list<unsigned long> nodeids; nodeids.clear();
+			for(BasicBlock::iterator itr2 = BB.begin(); itr2 != BB.end(); itr2++) {
+				const Value* inst = (const Value*)(&(*itr2));
+				#ifdef TOMMY_TEST
+				test0[inst] = instToString(inst);
+				#endif
+				fault_site_to_nodeid[inst] = nodeid;
+				nodeids.push_back(nodeid);
+
+				node_type_names[nodeid] = getMyTypeName(inst);
+
+				if(isa<ReturnInst>(inst)) {// || isa<BranchInst>(inst)) {
+					is_terminator.insert(nodeid);
+				}
+				nodeid ++;
+			}
+			nodeids_in_basicblocks[pBB] = nodeids;
+			std::string bb_name = pBB->getName().str();
+//			bb_names[pBB] = bb_name;
+		}
+		bbs_in_funcs[pF] = bbs;
+	}
+	num_nodes = nodeid;
+	errs() << is_terminator.size() << " terminators\n";
+
+	// Pass 2: Record all the use-def edges
+	for(Module::iterator itr = funcList.begin(); itr != funcList.end(); itr++) {
+		Function& F = *itr;
+		const Function* f = (const Function*)(&F);
+		if(isFunctionNameBlacklisted(F.getName().str().c_str()) ||
+			(!shouldInjectFunction(f))) continue;
+		Function::BasicBlockListType& bbList = F.getBasicBlockList();
+		fprintf(stderr, "%s\n", F.getName().str().c_str());
+		for(Function::iterator itr1 = bbList.begin(); itr1 != bbList.end(); itr1++) {
+			BasicBlock& BB = *itr1;
+			for(BasicBlock::iterator itr2 = BB.begin(); itr2 != BB.end(); itr2++) {
+				const Instruction* inst = &(*itr2);
+				const Value* def = (const Value*)(inst);
+
+				if(isa<PHINode>(inst)) {
+					PHINode* phinode = (PHINode*)(inst);
+					unsigned n_incoming = phinode->getNumIncomingValues();
+					unsigned long to_nid = fault_site_to_nodeid.at((Value*)inst);
+					if(n_incoming > 0) {
+						for(unsigned i=0; i<n_incoming; i++) {
+							Value* inc = phinode->getIncomingValue(i);
+							if(fault_site_to_nodeid.find(inc) == fault_site_to_nodeid.end()) {
+								continue; // A PHI node may have a "constant" incoming value: e.g. %i.07.i2 = phi i32 [ 0, %NumOfBitsSet.exit ], [ %14, %12 ]
+							}
+							unsigned long from_nid = fault_site_to_nodeid.at(inc);
+							is_in_chain.insert(from_nid);
+							is_in_chain.insert(to_nid);
+						}
+					}
+				}
+				
+				{
+					Instruction::const_use_iterator itr3_begin = inst->use_begin();
+					Instruction::const_use_iterator itr3_end   = inst->use_end();
+					for(Instruction::const_use_iterator itr3 = itr3_begin;
+						itr3 != itr3_end; itr3++) {
+						const User* user = *itr3;
+						const Value* use = dynamic_cast<const Value*>(user);
+						if(use) {
+							unsigned long def_nid = fault_site_to_nodeid.at(def);
+							unsigned long use_nid = fault_site_to_nodeid.at(use);
+							usedef_edge_list.push_back(std::make_pair(def_nid, use_nid));
+							is_in_chain.insert(def_nid);
+							is_in_chain.insert(use_nid);
+						}
+					}
+				}
+
+				if(isa<BranchInst>(inst)) { // Add an ety to branch_edge_list
+					BranchInst* br_inst = (BranchInst*)(inst);
+					unsigned n_succ = br_inst->getNumSuccessors();
+					for(unsigned i=0; i<n_succ; i++) {
+						BasicBlock* succ = br_inst->getSuccessor(i);
+						Instruction* first_non_phi = succ->getFirstNonPHI();
+						unsigned long from_nid = fault_site_to_nodeid.at((Value*)(inst));
+						unsigned long to_nid   = fault_site_to_nodeid.at((Value*)(first_non_phi));
+						branch_edge_list.push_back(std::make_pair(from_nid, to_nid));
+					}
+				}
+			}
+		}
+	}
+
+	errs() << "[recordUseDefChain] " << usedef_edge_list.size() << " entries in use-def graph.\n";
+
+}
+
