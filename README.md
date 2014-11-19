@@ -1,6 +1,6 @@
 KULFI
 =====
-#### Version: beta 2 version
+#### Version 1.0
 ## Introduction
 
 Kontrollable Utah LLVM Fault Injector (KULFI) tool is an instruction level fault injector which is capable of injecting random single bit errors at instruction level. It supports both dynamic and static error injection techniques. In case of static error injection, the fault site is randomly selected before the program execution. In case of dynamic error injection, fault site is randomly selected during program execution. KULFI allows finer control over error injection by providing options which could be defined by user. E.g., user could define probablity of the fault occurence, byte position where error could be injected, distinguish whether fault should be injected into pointer register or data register etc.  KULFI utilizes [LLVM](http://llvm.org/) Compiler Infrastructure. This tool is owned by [Gauss Research Group](http://www.cs.utah.edu/formal_verification/) at [School of Computing](http://www.cs.utah.edu/), [University of Utah](http://www.utah.edu/), Salt Lake City, USA. If you have any tool related queries, join our <a href="https://groups.google.com/d/forum/kulfi-dev"> mailing list</a> and send your queries to the <a href="mailto:kulfi-dev@googlegroups.com">list</a>.  <br><br> Copyright Information: This code is available under The University of Illinois/NCSA Open Source License (NCSA).Please refer to the <a href="http://opensource.org/licenses/NCSA">link</a> for more details.
@@ -62,7 +62,10 @@ When you use KULFI in your research work, please cite our work using below citat
     $ llvm-link Corrupt.bc Sample.bc -o Final.bc
 
 ##### Step 4: Inject fault(s)!
+
 Now run the fault pass on "Final.bc" using below guideline. Refer to the "Command Line Options" section to get details about supported flags.
+
+Note: the -fn flag is now replaced with reading from a "function name white list" file. Make a text file containing the names of all the functions intended for fault injection under the folder where the following "opt" command is invoked.
     
     $ opt -load <path-to-faults.so>/faults.so [-staticfault|-dynfault] [-ef N] [-tf N] [-b N] [-de 0/1] [-pe 0/1] [-ijo 0/1] 
       [-pfs 0/1] [-fn "func_name"]
